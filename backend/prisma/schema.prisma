@@ -10,3 +10,57 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+enum Difficulty {
+  hard
+  medium
+  easy
+}
+
+model User {
+  id         String  @unique @default(uuid())
+  name       String
+  email      String
+  password   String
+  isVerified Boolean @default(false)
+  quizez     Quiz[]
+}
+
+model Quiz {
+  id              String     @unique @default(uuid())
+  title           String
+  description     String
+  password        String?
+  authorID        String
+  author          User       @relation(fields: [authorID], references: [id])
+  timeLimitSec    Int?
+  passingScore    Int?
+  totalMarks      Int
+  attempts        Int?
+  difficulty      Difficulty
+  liveAt          DateTime?
+  closeAt         DateTime?
+  negativeMarking Boolean?
+  shuffle         Boolean
+  questions       Question[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Question {
+  id         String   @unique @default(ulid())
+  text       String
+  questionNo Int
+  options    Option[]
+  quizId     String
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+}
+
+model Option {
+  id         String   @unique @default(uuid())
+  text       String
+  isAnswer   Boolean  @default(false)
+  optionNo   Int
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+}
