@@ -5,7 +5,7 @@ enum Difficulty {
   medium,
   easy,
 }
-const Quiz = z.object({
+export const QuizSchema = z.object({
   title: z
     .string()
     .trim()
@@ -29,3 +29,5 @@ const Quiz = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 });
+
+export type Quiz = z.infer<typeof QuizSchema>;

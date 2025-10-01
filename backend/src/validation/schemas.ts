@@ -1,6 +1,6 @@
 import { email, z } from "zod";
 
-const signupSchema = z.object({
+export const UserSchema = z.object({
   name: z
     .string()
     .trim()
