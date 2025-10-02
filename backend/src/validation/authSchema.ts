@@ -1,16 +1,35 @@
 import z from "zod";
-import { UserSchema } from "./schemas.js";
+import { userSchema } from "./schemas.js";
 
-export const SignUpSchema = UserSchema.extend({
-  confirmPassword: z.string().trim(),
-})
+export const signUpSchema = z
+  .object({
+    name: userSchema.name,
+    email: userSchema.email,
+    password: userSchema.password,
+  })
+  .extend({
+    confirmPassword: z.string().trim(),
+  })
   .refine((body) => body.password === body.confirmPassword, {
     error: "Passwords do not match",
     path: ["confirmPassword"],
   })
   .transform(({ confirmPassword, ...rest }) => rest);
 
-export const SigninSchema = UserSchema.pick({ name: true, email: true });
+export const signinSchema = z.object({
+  name: userSchema.name,
+  email: userSchema.email,
+  password: userSchema.password,
+});
 
-export type signupBody = z.infer<typeof SignUpSchema>;
-export type signinBody = z.infer<typeof SigninSchema>;
+export const bearerTokenSchema = z.object({
+  token: z
+    .string()
+    .trim()
+    .startsWith("Bearer ")
+    .transform((val) => val.replace("Bearer ", "")),
+});
+
+export type SignupBody = z.infer<typeof signUpSchema>;
+export type SigninBody = z.infer<typeof signinSchema>;
+export type BearerToken = z.infer<typeof bearerTokenSchema>;

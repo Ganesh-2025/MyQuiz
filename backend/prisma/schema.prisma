@@ -20,7 +20,7 @@ enum Difficulty {
 model User {
   id         String  @unique @default(uuid())
   name       String
-  email      String
+  email      String  @unique
   password   String
   isVerified Boolean @default(false)
   quizez     Quiz[]
