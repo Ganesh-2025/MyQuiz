@@ -1,6 +1,5 @@
-import Express from "express";
 import { PrismaClient } from "generated/prisma/index.js";
-const app = Express();
+import app from "@/app.js";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 

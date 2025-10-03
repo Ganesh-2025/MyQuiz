@@ -10,7 +10,7 @@ import {
 } from "@/validation/authSchema.js";
 import becrypt from "bcrypt";
 import type { NextFunction, Request, Response } from "express";
-import jwt, { type Secret } from "jsonwebtoken";
+import jwt, { type JwtPayload, type Secret } from "jsonwebtoken";
 
 const cookieOptions = {
   httpOnly: true,
@@ -19,10 +19,12 @@ const cookieOptions = {
 };
 const JWT_COOKIE = "jwtToken";
 
-const signJwtToken = (payload: string): string => {
+const signJwtToken = (payload: JwtPayload): string => {
+  console.log(process.env.JWT_EXPIRES_IN);
   const secret = process.env.JWT_SECRET as Secret;
   const expiresIn = Number(process.env.JWT_EXPIRES_IN) as number;
-  const token = jwt.sign(payload, secret, { expiresIn });
+  console.log(payload);
+  const token = jwt.sign(payload, secret, { expiresIn: expiresIn });
   return token;
 };
 
@@ -39,7 +41,7 @@ export const signup = catchAsync(
       data: signupBody,
       omit: { password: true },
     });
-    const jwtToken = signJwtToken(user.id);
+    const jwtToken = signJwtToken({ sub: user.id });
 
     return res.cookie(JWT_COOKIE, jwtToken, cookieOptions).status(200).json({
       status: "success",
@@ -59,7 +61,7 @@ export const signin = catchAsync(
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user || !becrypt.compareSync(password, user.password))
       throw new AppError(400, "error", "email or password is wrong");
-    const jwtToken = signJwtToken(user.id);
+    const jwtToken = signJwtToken({ sub: user.id });
     delete (user as any).password;
     return res.cookie(JWT_COOKIE, jwtToken, cookieOptions).status(200).json({
       status: "success",

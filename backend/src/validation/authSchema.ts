@@ -17,7 +17,6 @@ export const signUpSchema = z
   .transform(({ confirmPassword, ...rest }) => rest);
 
 export const signinSchema = z.object({
-  name: userSchema.name,
   email: userSchema.email,
   password: userSchema.password,
 });
