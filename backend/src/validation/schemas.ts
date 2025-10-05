@@ -1,9 +1,10 @@
 import { z } from "zod";
 import globalSchema from "./globalSchema.js";
+import { create } from "domain";
 
 const Difficulty = ["easy", "medium", "hard"] as const;
 
-export const userSchema = {
+export const userProps = {
   id: globalSchema.id,
   name: z
     .string()
@@ -14,7 +15,7 @@ export const userSchema = {
   password: globalSchema.password,
 };
 
-export const quizSchema = {
+export const quizProps = {
   id: globalSchema.id,
   title: z
     .string()
@@ -36,6 +37,34 @@ export const quizSchema = {
   closeAt: z.date(),
   negativeMarking: z.boolean(),
   shuffle: z.boolean(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+};
+
+export const optionProps = {
+  id: globalSchema.id,
+  optionNo: z.number().int().positive(),
+  text: z
+    .string()
+    .trim()
+    .min(1, "option text required")
+    .max(200, "option size exceed"),
+  isAnswer: z.boolean(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+};
+
+export const questionProps = {
+  id: globalSchema.id,
+  quizID: quizProps.id,
+  questionNo: z.number().int().positive(),
+  text: z
+    .string()
+    .trim()
+    .min(1, "question text required")
+    .max(500, "question size exceed"),
+  marks: z.number().gt(0, "invalid marks"),
+  deduct: z.number().gte(0, "invalid deduct marks"),
   createdAt: z.date(),
   updatedAt: z.date(),
 };

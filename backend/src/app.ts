@@ -7,6 +7,7 @@ import Express, {
 import authRouter from "./routes/authRoutes.js";
 import z, { ZodError } from "zod";
 import userRoutes from "./routes/userRoutes.js";
+import quizRoutes from "./routes/quizRoutes.js";
 
 const app = Express() as Ex;
 
@@ -21,6 +22,7 @@ app.get("/", (_, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/me", userRoutes);
+app.use("/api/quiz", quizRoutes);
 app.use((req: Request, res: Response): Response => {
   return res.status(404).json({
     status: "error",
@@ -47,7 +49,8 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   return res.status(500).json({
     status: "error",
     message: err.message,
-    data: zoderr || err,
+    data: err,
+    type: err.name,
   });
 });
 

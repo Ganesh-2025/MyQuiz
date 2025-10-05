@@ -1,11 +1,11 @@
 import z from "zod";
-import { userSchema } from "./schemas.js";
+import { userProps } from "./schemas.js";
 
 export const signUpSchema = z
   .object({
-    name: userSchema.name,
-    email: userSchema.email,
-    password: userSchema.password,
+    name: userProps.name,
+    email: userProps.email,
+    password: userProps.password,
   })
   .extend({
     confirmPassword: z.string().trim(),
@@ -17,8 +17,8 @@ export const signUpSchema = z
   .transform(({ confirmPassword, ...rest }) => rest);
 
 export const signinSchema = z.object({
-  email: userSchema.email,
-  password: userSchema.password,
+  email: userProps.email,
+  password: userProps.password,
 });
 
 export const bearerTokenSchema = z.object({

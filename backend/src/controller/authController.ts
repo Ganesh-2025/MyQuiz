@@ -10,7 +10,12 @@ import {
 } from "@/validation/authSchema.js";
 import becrypt from "bcrypt";
 import type { NextFunction, Request, Response } from "express";
-import jwt, { type JwtPayload, type Secret } from "jsonwebtoken";
+import jwt, {
+  type JwtPayload,
+  type Secret,
+  type SignOptions,
+} from "jsonwebtoken";
+import { promisify } from "util";
 
 const cookieOptions = {
   httpOnly: true,
@@ -20,11 +25,11 @@ const cookieOptions = {
 const JWT_COOKIE = "jwtToken";
 
 const signJwtToken = (payload: JwtPayload): string => {
-  console.log(process.env.JWT_EXPIRES_IN);
   const secret = process.env.JWT_SECRET as Secret;
-  const expiresIn = Number(process.env.JWT_EXPIRES_IN) as number;
-  console.log(payload);
-  const token = jwt.sign(payload, secret, { expiresIn: expiresIn });
+  const expiresIn = process.env.JWT_EXPIRES_IN as string;
+  const token = jwt.sign(payload, secret, {
+    expiresIn: expiresIn,
+  } as SignOptions);
   return token;
 };
 
@@ -71,7 +76,7 @@ export const signin = catchAsync(
   }
 );
 
-export const signOut = (req: Request, res: Response): Response => {
+export const signout = (req: Request, res: Response): Response => {
   res.cookie(JWT_COOKIE, null);
   return res.status(200).json({
     status: "success",
