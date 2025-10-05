@@ -1,4 +1,4 @@
-import { bearerTokenSchema } from "@/validation/authSchema.js";
+import { bearerTokenSchema } from "@/validation/authValidation.js";
 import type { NextFunction, Request, Response } from "express";
 import { type JwtPayload } from "jsonwebtoken";
 import catchAsync from "@/util/catchAsync.js";

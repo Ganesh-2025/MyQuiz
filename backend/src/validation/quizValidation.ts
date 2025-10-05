@@ -3,7 +3,7 @@ import { quizProps } from "./schemas.js";
 import globalSchema from "./globalSchema.js";
 import { createQuestion } from "./questionValidation.js";
 
-export const createQuiz = z
+export const createQuizBody = z
   .object({
     title: quizProps.title,
     description: quizProps.description,
@@ -32,6 +32,8 @@ export const createQuiz = z
     { error: "invalid live and close time" }
   );
 
-export const updateQuiz = createQuiz.omit({ questions: true }).partial();
-export type CreateQuiz = z.infer<typeof createQuiz>;
-export type UpdateQuiz = z.infer<typeof updateQuiz>;
+export const updateQuizBody = createQuizBody
+  .omit({ questions: true })
+  .partial();
+export type CreateQuiz = z.infer<typeof createQuizBody>;
+export type UpdateQuiz = z.infer<typeof updateQuizBody>;

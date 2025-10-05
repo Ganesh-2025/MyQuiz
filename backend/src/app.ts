@@ -23,6 +23,7 @@ app.get("/", (_, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/me", userRoutes);
 app.use("/api/quiz", quizRoutes);
+
 app.use((req: Request, res: Response): Response => {
   return res.status(404).json({
     status: "error",

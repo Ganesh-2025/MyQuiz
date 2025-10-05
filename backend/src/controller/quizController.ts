@@ -3,15 +3,15 @@ import type { AuthRequest } from "@/types/express.js";
 import AppError from "@/util/AppError.js";
 import catchAsync from "@/util/catchAsync.js";
 import {
-  createQuiz,
-  updateQuiz,
+  createQuizBody,
+  updateQuizBody,
   type CreateQuiz,
   type UpdateQuiz,
 } from "@/validation/quizValidation.js";
 import {
   browseQuizesReqSchema,
   type BrowseQuizezReq,
-} from "@/validation/reqSchemas.js";
+} from "@/validation/schemas.js";
 import type { NextFunction, Request, Response } from "express";
 import type { Prisma } from "generated/prisma/index.js";
 
@@ -78,10 +78,10 @@ export const getQuizById = catchAsync(
   }
 );
 
-export const create = catchAsync(
+export const createQuiz = catchAsync(
   async (req: Request, res: Response): Promise<Response> => {
     const authReq = req as AuthRequest;
-    const parsedBody: CreateQuiz = createQuiz.parse(authReq.body);
+    const parsedBody: CreateQuiz = createQuizBody.parse(authReq.body);
 
     const quiz = await prisma.quiz.create({
       data: {
@@ -123,10 +123,10 @@ export const create = catchAsync(
   }
 );
 
-export const update = catchAsync(
+export const updateQuiz = catchAsync(
   async (req: Request, res: Response): Promise<Response | void> => {
     const authReq = req as AuthRequest;
-    const parsedBody = updateQuiz.parse(
+    const parsedBody = updateQuizBody.parse(
       authReq.body
     ) as unknown as Prisma.QuizUpdateInput;
     const updatedQuiz = await prisma.quiz.update({

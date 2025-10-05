@@ -7,7 +7,7 @@ import {
   signUpSchema,
   type SigninBody,
   type SignupBody,
-} from "@/validation/authSchema.js";
+} from "@/validation/authValidation.js";
 import becrypt from "bcrypt";
 import type { NextFunction, Request, Response } from "express";
 import jwt, {
