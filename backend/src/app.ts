@@ -8,9 +8,18 @@ import authRouter from "./routes/authRoutes.js";
 import z, { ZodError } from "zod";
 import userRoutes from "./routes/userRoutes.js";
 import quizRoutes from "./routes/quizRoutes.js";
-
+import session from "express-session";
 const app = Express() as Ex;
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET!,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true },
+  })
+);
+app.use(Express.urlencoded({ extended: true }));
 app.use(Express.json());
 app.use((req: Request, _res: Response, next: NextFunction) => {
   console.log("cookies received : ", req.cookies);

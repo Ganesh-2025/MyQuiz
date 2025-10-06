@@ -31,7 +31,12 @@ export const createQuizBody = z
       data.closeAt > data.liveAt,
     { error: "invalid live and close time" }
   );
-
+export const submitQuizBody = z.array(
+  z.object({
+    questionId: z.string(),
+    selectedOptionIds: z.array(z.string()),
+  })
+);
 export const updateQuizBody = createQuizBody
   .omit({ questions: true })
   .partial();
