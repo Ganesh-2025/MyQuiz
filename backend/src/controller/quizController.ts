@@ -308,7 +308,7 @@ const evaluate = (
   });
   return score;
 };
-export const sendReport = catchAsync;
+export const sendReport = catchAsync
 async (
   req: Request,
   res: Response,
@@ -343,3 +343,15 @@ async (
     data: { submission },
   });
 };
+
+export const sendCurrentQuizData = catchAsync(
+  async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+    const quizID = req.session.quizID;
+    if (!quizID) return next(new AppError(400, "error", "No quiz ID provided"));
+    return res.status(200).json({
+      status: "success",
+      data: { quizID, startedAt: req.session.startedAt, expiredAt: req.session.expiredAt, hasTimeLimit: req.session.hasTimeLimit, timeremainingSec: req.session.timeremainingSec },
+    });
+  }
+  
+);

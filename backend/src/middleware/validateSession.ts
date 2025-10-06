@@ -9,6 +9,9 @@ const validateSession = (req: Request, res: Response, next: NextFunction) => {
     authReq.session.userID &&
     authReq.session.userID === authReq.payload.sub
   ) {
+    if(req.session.expiredAt) {
+      req.session.timeremainingSec = Math.floor(((Number(req.session.startedAt!) + Number(req.session.timeLimitSec!)) - Date.now()) / 1000);
+    }  
     next();
   } else {
     return next(new AppError(401, "error", "Unauthorized: invalid session"));
